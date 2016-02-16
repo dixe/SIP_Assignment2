@@ -40,7 +40,7 @@ For a constant PDF the CDF will just be a monotonically increasing, each step in
 
 \subsection{1.4}
 \subsection{1.5}
-Generally no, given an iamge transformed by a CDF, we have no way of knowing which intensities matched to which acummulated intensities.
+Generally no, given an image transformed by a CDF, we have no way of knowing which intensities matched to which acummulated intensities.
 
 \subsection{1.6}
 
@@ -73,13 +73,38 @@ The kernel in 4.5.2.1 shows the kernel in for the x derivative, and thus these w
 
 
 \subsection{2.3}
-CODE TODO
+blue is median filter, red is mean filter
+TODO talk about image
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=1\textwidth]{fig23.jpg}
+    \caption{9 Images with inceasing windows size starting at 3 ending at 19.}
+    \label{fig:2_3}
+\end{figure}
 
 \subsection{2.4}
-At some point the windows is so big, that the values furthest away frm the center are so small, that their weight is neglectable, thus increasing the windows size showing a notacible difference.
+Filtered with gaussian kernel where $\sigma = 5$, in in the range 3:19, with increments og 2, to keep the kernel diameter odd
+
+TODO talk about image
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=1\textwidth]{fig24.jpg}
+    \caption{9 Images with inceasing windows size starting at 3 ending at 19.}
+    \label{fig:2_4}
+\end{figure}
+
+At some point the windows is so big, that the values furthest away from the center are so small, that their weight is neglectable, thus increasing the windows size show no notacible difference.
 
 \subsection{2.5}
-cont 2.4
+
+Figure \reg{fig:2_5} show the cameraman filter with a gaussian filter, with increasing $\sigma$ starting at 3 and ending at 19, in incremental steps of 2. The windows size N is 3*sigma + 1, and then rounding up to nearest odd integer. What we can see TODO
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=1\textwidth]{fig25.jpg}
+    \caption{9 Images with inceasing windows size starting at 3 ending at 19.}
+    \label{fig:2_5}
+\end{figure}
 
 \section{3 Bonus question}
 
