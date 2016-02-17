@@ -86,6 +86,30 @@ colormap(gray);
 
 
 
+%% 2.3.1
+I = imread('eight.tif');
+
+Isp = imnoise(I,'salt & pepper', 0.03);
+Ig = imnoise(I,'gaussian',0.02);
+
+it = 1;
+colormap(gray); 
+for N = 3:2:7
+    k = ones(N,N)/N^2;
+    
+    Isp_mean = imfilter(Isp,k);   
+    Ig_mean = imfilter(Ig,k);
+    
+    Isp_med = medfilt2(Isp,[N,N]);
+    Ig_med = medfilt2(Ig,[N,N]);
+    
+    subplot(3,4,it); imagesc(Isp_mean); axis off; axis image;
+    subplot(3,4,it+1); imagesc(Ig_mean); axis off; axis image;
+    subplot(3,4,it+2); imagesc(Isp_med); axis off; axis image;
+    subplot(3,4,it+3); imagesc(Ig_med); axis off; axis image;
+    
+    it = it + 4;
+end    
 %% 2.3
 I = imread('eight.tif');
 
@@ -144,11 +168,14 @@ ylabel('Time in seconds') % y-axis label
 hold off
 
 %% 2.4
-I = imread('cameraman.tif');
+I = imread('eight.tif');
+
+Isp = imnoise(I,'salt & pepper', 0.03);
+Ig = imnoise(I,'gaussian',0.02);
 n = 1;
 for N = 3:2:19
     Filt = fspecial('gaussian', N, 5);
-    subplot(3,3,n); imagesc(imfilter(I,Filt)); axis off; axis image;  
+    subplot(3,3,n); imagesc(imfilter(Isp,Filt)); axis off; axis image;  
     n = n+1;
 end
 
@@ -156,16 +183,19 @@ colormap(gray);
 
 
 %% 2.5
-I = imread('cameraman.tif');
+I = imread('eight.tif');
+
+Isp = imnoise(I,'salt & pepper', 0.03);
+Ig = imnoise(I,'gaussian',0.02);
 
 n = 1;
-for sig = 1:2:18
+for sig = 1:2:17
     N = sig * 3 + 1;
     if mod(N,2) == 0
         N = N +1;
     end
-    Filt = fspecial('gaussian', N, 5);
-    subplot(3,3,n); imagesc(imfilter(I,Filt)); axis off; axis image;  
+    Filt = fspecial('gaussian', N, sig);
+    subplot(3,3,n); imagesc(imfilter(Isp,Filt)); axis off; axis image;  
     n = n +1;
 end
 
