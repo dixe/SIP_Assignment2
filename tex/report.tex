@@ -89,7 +89,7 @@
 \fancyhf{} % Clears header and footer
 \lhead{\bfseries SIP\\Assignment 2}
 \rhead{University of Copenhagen\\Computer Science}
-\lfoot{Page \thepage\ of \pageref{LastPage}}
+\lfoot{Page \thepage\ }
 \rfoot{Nikolaj Friis Østergaard - ltm741 \\ Mads Christian Thoudahl - qmh332  \\ Michael Feveile Mariboe - njp947}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
@@ -124,7 +124,7 @@
 \subsection{1.1.}
 % \textit{``In mathematical terms, what is the cumulative distribution function (CDF) with respect to the probability density function (PDF) from the continuous point of view ? What can you infer about the variations of the CDF in general?''}\\
 
-In mathematical terms, the \textit{Cumulative Density function} (CDF) with respect to (wrt.) to the \textit{Probability density function} (PDF) from the continuous point of view is the definite integral from negative infinity to each value of the variable of the function wrt. the variable:
+In mathematical terms, the \textit{Cumulative Density function} (CDF) with respect to (wrt.) the \textit{Probability density function} (PDF) from the continuous point of view is the definite integral from negative infinity to each value of the variable of the function wrt. the variable:
 \begin{align}
   cdf(x) = \int_{-\infty}^x pdf(x) \quad \text{d}x
 \end{align}
@@ -191,35 +191,27 @@ end\end{lstlisting}
 \subsection{1.4.}
 % \textit{``Given an image I and its CDF C, write a matlab routine that computes the floating-point image C(I) such that the intensity at each pixel (i, j) is C(I(i, j))''}\\
 
-The tricky part here is really to remember that images are stored laid out row-major in matlab, this means that our perception of I(x,y) has to be queried like I(y,x) in matlab.
-
-Running the code will open a figure, that may be queried multiple times, with the answer will be stated in the title.
-The result of the calculation has the same effect as asking 'how big a part of the pixels are darker than the one selected?'
-This means when pressing a relative dark pixel in the image, the result is low (near $0.0$), and when pressing a relatively bright pixel, the result will be high (near $1.0$).
-
-\vfill
+The function takes an input image In and its CDF C, and for every pixel location (i,j) output the value C(In(i,j)), which is the CDF entry for the intensity IN(i,j)
+\begin{figure}[h!]
+  \begin{lstlisting}[caption='Code to compute cdf image']
+function Out = fun14(In, C)
+In = double(In);
+Out = In;
+[n,m] = size(In);
+for i = 1 : n
+    for j = 1 : m
+        Out(i,j) = C(In(i,j));
+    end
+end
+end
+\end{lstlisting}
+\end{figure}
+Figure \ref{fig:1.4} shows the original image to the right and the output image after being run throught fun14. We can see how the intensities get brighter, this makes sense, since the CDF for the value 20, will be higher then 20, since it comulative of the previous entries.
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.45\linewidth, trim={40 40 40 30 }, clip=true]{./1_4a.png}
-  \includegraphics[width=0.45\linewidth, trim={40 40 40 30 }, clip=true]{./1_4b.png}
-  \caption{Select a pixel, display intensity and the part this pixel is brighter than}
+  \includegraphics[width=1\textwidth,, clip=true]{fig14.jpg}
+  \caption{Original image and the image where I(i,j) = CDF(I(i,j))}
   \label{fig:1.4}
-\end{figure}
-
-\vfill
-\begin{figure}[h!]
-  \begin{lstlisting}[caption='Code to display Cumulative Histogram']
-function brighterthan(fname)
-  I = imread(fname); h = imhist(I); ncs = cdf(h);
-  fmt = 'selected pixel x:%d, y:%d; I(%d,%d):%d, C( I(%d,%d)):%f';
-  hFig = figure(1); set(hFig, 'Position', [20 20 750 750]);
-  imagesc(I); axis image; colormap(gray); xlabel('X'); ylabel('Y');
-  while true
-    [x,y] = ginput(1);
-    x = round(x); y = round(y);
-    s = sprintf(fmt,x,y,x,y,round(I(y,x)),x,y,ncs(I(y,x)))
-    title(s);
-end\end{lstlisting}
 \end{figure}
 
 \newpage
@@ -245,7 +237,7 @@ The \textit{histmatch} procedure is implemented in matlab, and the results are s
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.6\linewidth, trim={50 30 50 30 }, clip=true]{./1_6.png}
+  \includegraphics[width=1\textwidth, clip=true]{./1_6.png}
   \caption{Image 'pout.tif' matched with the histogram characteristics of the 'trui.png' image}
   \label{fig:1.6}
 \end{figure}
@@ -273,7 +265,7 @@ The histmatch function applied to the \texttt{pout.tif} image and the constant h
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.8\linewidth, trim={40 40 40 30 }, clip=true]{./1_7.png}
+  \includegraphics[width=1\linewidth, trim={40 40 40 30 }, clip=true]{./1_7.png}
   \caption{Image 'pout.tif' matched with uniform pdf image, and compared to matlab histeq}
   \label{fig:1.7}
 \end{figure}
@@ -293,30 +285,26 @@ plots...\end{lstlisting}
 % \textit{``Let I 1 and I 2 be two images with cumulative histograms C 1 and C 2 . Letâ€™s introduce : $\phi = \frac{1}{2} \left( C_1^{(-1)} + C_2^{(-1)} \right) $ and the images $\tilde{I}1 = \phi(C1 (I1))$ and $\tilde{I}2 = \phi(C2 (I2 )) $ called the midway specifications of I1 and I2. If I1 and I2 are two constant images with respective values a and b, prove that the midway specifications are both equal to the constant image (a+b)/2? Is the cumulative histogram of the midway specifications equal to the average of the cumulative histograms ? ''}\\
 
 \subsubsection{1.8.1.}
-Remeber definition on pseudo inverse: $C^{-1}(l) = min \{ \left. s \right|_{C(s) \geq l} \}$ for $s \in \{0,..,255\}$
-\begin{align}
+NEW
+We have $  \phi = \frac{1}{2} (C_1^{-1} + C_2^{-1})$, inserting
+\begin{align*}
   \tilde{I}_1 &= \phi(C_1(I_1)) &&&  \tilde{I}_2 &= \phi(C_2(I_2))\\
-  \tilde{I}_1 &= \frac{1}{2} \left( C_1^{(-1)}(C_1(a)) + C_2^{(-1)}(C_1(a)) \right) &&&
-  \tilde{I}_2 &= \frac{1}{2} \left( C_1^{(-1)}(C_2(b)) + C_2^{(-1)}(C_2(b)) \right)\\
-  \tilde{I}_1 &= \frac{1}{2} \left( a + \begin{cases}
-                              0 & \text{if } a < b \\
-                              b & \text{if } b \leq a
-                            \end{cases} \right) &&&
-  \tilde{I}_2 &= \frac{1}{2} \left( \begin{cases}
-                          0 & \text{if } b < a \\
-                          a & \text{if } a \leq b
-                        \end{cases} + b \right) \\
-  \tilde{I}_1 &= \begin{cases}
-      \frac{a}{2} & \text{if } a < b \\
-      \frac{a+b}{2} & \text{if } b \leq a
-                 \end{cases} &&&
-  \tilde{I}_2 &= \begin{cases}
-      \frac{b}{2} & \text{if } b < a \\
-      \frac{a+b}{2} & \text{if } a \leq b
-                 \end{cases}
+  \tilde{I}_1 &= \frac{1}{2} \left( C_1^{(-1)}(C_1(I_1)) + C_2^{(-1)}(C_1(I_1)) \right) &&&
+  \tilde{I}_2 &= \frac{1}{2} \left( C_1^{(-1)}(C_2(I_2)) + C_2^{(-1)}(C_2(I_2)) \right)\\
+  \tilde{I}_1 &= \frac{1}{2} \left( I_1 + C_2^{(-1)}(C_1(I_1)) \right) &&&
+  \tilde{I}_2 &= \frac{1}{2} \left( C_1^{(-1)}(C_2(I_2)) + I_2) \right)\\
 \end{align}
+Remembering definition 3.25
+$$
+f(x) = C_z^{-1}(C_x(x))
+$$
+Where z = f(x), we can thus use this to get $C_2^{(-1)}(C_1(I_1)) = I_2$ and $C_1^{(-1)}(C_2(I_2)) = I_1$ substitution in this in gets us
+\begin{align*}
+  \tilde{I}_1 &= \frac{1}{2} \left( I_1 + I_2 \right) &&&
+  \tilde{I}_2 &= \frac{1}{2} \left( I_1 + I_2 \right)\\
+\end{align}
+We have proved that for constant images the midway specification is equal to the constant $\frac{a+b}{2}$ where a and b are the two images.
 
-It seems I have somehow failed to prove Imagethat $\tilde{I}_1 = \tilde{I}_2$ even if the images $I_1$ and $I_2$ are constant.
 
 \subsubsection{1.8.2.}
 \begin{figure}[h!]

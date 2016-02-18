@@ -5,7 +5,6 @@ Out = In;
 for i = 1 : n
     for j = 1 : m
         Out(i,j) = C(In(i,j));
-    end   
+    end
 end
-
 end
